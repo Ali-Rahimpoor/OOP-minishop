@@ -36,26 +36,55 @@ class Router
     /**
      * اجرای Route
      */
-    public function dispatch(string $uri, string $method): void
+   public function dispatch(string $uri, string $httpMethod): void
     {
+        // فقط مسیر URL را دریافت کن
         $uri = parse_url($uri, PHP_URL_PATH);
 
+        // حذف پوشه پروژه (در صورت اجرا داخل SubFolder)
+        $uri = str_replace('/oop-minishop', '', $uri);
+
+        // یکسان سازی اسلش ها
         $uri = $this->normalize($uri);
 
-        if (! isset($this->routes[$method][$uri])) {
-
+        // اگر هیچ Route ای برای این متد ثبت نشده بود
+        if (!isset($this->routes[$httpMethod])) {
             http_response_code(404);
-
             exit('404 | Page Not Found');
-
         }
 
-        [$controller, $action] = $this->routes[$method][$uri];
+        foreach ($this->routes[$httpMethod] as $route => $handler) {
 
-        $controller = new $controller();
+            // تبدیل Route به Regex
+            $pattern = preg_replace(
+                '/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/',
+                '([^/]+)',
+                $route
+            );
 
-        $controller->$action();
+            $pattern = '#^' . $pattern . '$#';
+
+            // بررسی تطابق URL
+            if (!preg_match($pattern, $uri, $matches)) {
+                continue;
+            }
+
+            // حذف کل رشته Match شده
+            array_shift($matches);
+
+            [$controllerClass, $action] = $handler;
+
+            $controller = new $controllerClass();
+
+            $controller->$action(...$matches);
+
+            return;
+        }
+
+        http_response_code(404);
+        exit('404 | Page Not Found');
     }
+    
 
     /**
      * حذف اسلش اضافی

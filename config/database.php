@@ -4,7 +4,7 @@ return [
 
     'host' => 'localhost',
 
-    'dbname' => 'oop_minishop',
+    'dbname' => 'digishop',
 
     'username' => 'root',
 

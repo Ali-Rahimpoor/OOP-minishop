@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-// use App\Models\User;
+use App\Models\User;
 
 /**
  * مدیریت نشست کاربر (لاگین/لاگ‌اوت) بر پایه Session.
@@ -16,16 +16,15 @@ class Auth
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+    }    
+    public static function login(User $user): void
+    {
+        self::start();
+        session_regenerate_id(true);
+        $_SESSION['user_id']  = $user->id;
+        $_SESSION['username'] = $user->username;
+        $_SESSION['role']     = $user->role;
     }
-    // because i dont have User Class for Now 
-    // public static function login(User $user): void
-    // {
-    //     self::start();
-    //     session_regenerate_id(true);
-    //     $_SESSION['user_id']  = $user->id;
-    //     $_SESSION['username'] = $user->username;
-    //     $_SESSION['role']     = $user->role;
-    // }
 
     public static function logout(): void
     {

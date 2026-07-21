@@ -1,3 +1,7 @@
+@font-face {
+    font-family: yekan;
+    src: url('../font/yekan.woff') format('woff');
+}
 :root {
     --color-primary: #1960e9;
     --color-primary-hover: #005ca9;
@@ -14,7 +18,7 @@
 body {
     direction: rtl;
     text-align: right;
-    font-family: YekanBakh, serif;
+    font-family: 'yekan', serif;
     font-size: 16px;
     background: linear-gradient(45deg, #cdd4de, #9ba6b8);
     display: flex;
@@ -24,7 +28,7 @@ body {
 }
 
 input, textarea, button, select {
-    font-family: YekanBakh, serif;
+    font-family: 'yekan', serif;
 }
 
 .w-100{

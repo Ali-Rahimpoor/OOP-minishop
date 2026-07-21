@@ -16,7 +16,8 @@ date_default_timezone_set(
 );
 
 $router = new Router();
-
+require BASE_PATH . '/app/Helpers/url.php';
+require BASE_PATH . '/app/Helpers/view.php';
 require BASE_PATH . '/routes/web.php';
 
 $router->dispatch(

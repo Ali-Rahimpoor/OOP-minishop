@@ -12,7 +12,7 @@ class ProductsRepo
    }
    public function latest(int $limit = 10):array
    {
-      $sql = "SELECT * FROM products ORDER BY ID DESC LIMIT :limit";
+      $sql = "SELECT * FROM products ORDER BY ID ASC LIMIT :limit";
       
       $stmt = $this->pdo->prepare($sql);
       $stmt->bindValue(':limit',$limit,PDO::PARAM_INT);

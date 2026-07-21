@@ -6,7 +6,7 @@ class Product{
    public string $description = '';
    public ?string $thumbnail = null;
    public int $price = 0;
-   public int $sal_price = 0;
+   public int $sale_price = 0;
    public int $stock = 0;
    public string $status = 'pending';
    public ?string $created_at = null;
@@ -20,7 +20,7 @@ class Product{
       $product->description      = $row['description'] ?? '';
       $product->thumbnail        = $row['thumbnail'] ?? '';
       $product->price            = (int) $row['price'] ?? '';
-      $product->sal_price        = (int) $row['sale_price'] ?? '';
+      $product->sale_price        = (int) $row['sale_price'] ?? '';
       $product->status           = $row['status'] ?? '';
       $product->stock            = (int) $row['stock'] ?? '';
       $product->created_at       = $row['created_at'] ?? null;

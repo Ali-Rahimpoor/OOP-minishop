@@ -5,6 +5,6 @@
    <title>Document</title>
 </head>
 <body>
-   AddProduct
+   ADD | EDIT
 </body>
 </html>

@@ -10,7 +10,7 @@ class HomeController extends Controller
     public function index(): void
     {
         $repo = new ProductsRepo();
-        $products = $repo->latest(1);
+        $products = $repo->latest(5);
         $this->view('home',['products'=>$products]);
     }
 }

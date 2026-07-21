@@ -19,10 +19,10 @@ class Product{
       $product->title            = $row['title'] ?? '';
       $product->description      = $row['description'] ?? '';
       $product->thumbnail        = $row['thumbnail'] ?? '';
-      $product->price            = (int) $row['price'] ?? '';
-      $product->sale_price        = (int) $row['sale_price'] ?? '';
+      $product->price            = (int) $row['price'] ?? 0;
+      $product->sale_price        = (int) $row['sale_price'] ?? 0;
       $product->status           = $row['status'] ?? '';
-      $product->stock            = (int) $row['stock'] ?? '';
+      $product->stock            = (int) $row['stock'] ?? 0;
       $product->created_at       = $row['created_at'] ?? null;
       $product->updated_at       = $row['updated_at'] ?? '';
       return $product;

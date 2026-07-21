@@ -1,6 +1,5 @@
 <?php
 /**
-* @var index $key
 * @var Product $product
 */
 ?>
@@ -8,7 +7,7 @@
    <td><?php echo $key+1; ?></td>
    <td>
    <div class="table-flex-col">
-      <img class="product-thumbnail" src="https://dkstatics-public.digikala.com/digikala-products/b2c0eb53f0eeacdefb8771155bf5e4887222a654_1688388473.jpg?x-oss-process=image/resize,m_lfit,h_300,w_300/format,webp/quality,q_80"
+      <img class="product-thumbnail" src="<?php echo product_img_src($product->thumbnail); ?>"
             alt="">
       <p class="product-title">
          <?php echo $product->title; ?>
@@ -20,18 +19,18 @@
    <ins><?php echo $product->sale_price; ?></ins>
    </td>
    <td>
-         <?php echo discount_percent($product->price,$product->sale_price); ?> %
+         <?php echo show_percent($product->price,$product->sale_price); ?> 
    </td>
    <td>
    <?php echo $product->stock ?>
    </td>
    <td>
    <div class="product-status">
-      <?php echo $product->status; ?>
+      <?php echo get_status_label($product->status); ?>
    </div>
    </td>
    <td>
-   <?php echo $product->updated_at; ?>
+   <?php echo to_jalali($product->updated_at); ?>
    </td>
    <td>
    <div class="table-flex-col">

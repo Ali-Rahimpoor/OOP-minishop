@@ -11,6 +11,9 @@ abstract class Controller
 
     protected function redirect(string $url): never
     {
+        if($url === '/'){
+            $url = site_url('');            
+        }
         header("Location: {$url}");
         exit;
     }

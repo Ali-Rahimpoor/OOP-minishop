@@ -78,7 +78,8 @@ class ProductsRepo
       description = :description,
       thumbnail = :thumbnail,
       price = :price,
-      sale_price = :sale_price
+      sale_price = :sale_price,
+      status  = :status
       WHERE ID = :id";
       $stmt = $this->pdo->prepare($sql);
       return $stmt->execute([
@@ -88,6 +89,8 @@ class ProductsRepo
         'thumbnail'   => $product->thumbnail,
         'price'       => $product->price,
         'sale_price'  => $product->sale_price,
+        'status'      => $product->status
       ]);
    }
+   
 }

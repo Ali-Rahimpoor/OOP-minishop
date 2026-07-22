@@ -51,7 +51,7 @@ class ProductController extends Controller{
    public function update(int $id):void
    {
       $product = $this->productsRepo->findById($id);
-      print_r($product);exit;
+      
       if(!$product){
          die("ERROR IN EDIT");
       }

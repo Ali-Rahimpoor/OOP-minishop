@@ -22,6 +22,7 @@ class ProductsRepo
       foreach($rows as $row){        
           $products[] = Product::fromArray($row);
       }      
+      
       return $products;
    }
    public function create(Product $product):bool
@@ -55,6 +56,38 @@ class ProductsRepo
          ':sale_price'  => $product->sale_price,
          ':stock'       => $product->stock,
          ':status'      => $product->status
+      ]);
+   }
+   public function findById(int $id): ?Product
+   {
+      $stmt = $this->pdo->prepare(
+         "SELECT * FROM products WHERE ID = :id"
+      );
+      $stmt->execute(['id'=>$id]);
+      $product = $stmt->fetch();
+      if(!$product){
+         return null;
+      }
+      // print_r($product);exit;
+      return Product::fromArray($product);
+   }
+   public function update(int $id,Product $product):bool
+   {
+      $sql = "UPDATE products SET
+      title = :title,
+      description = :description,
+      thumbnail = :thumbnail,
+      price = :price,
+      sale_price = :sale_price
+      WHERE ID = :id";
+      $stmt = $this->pdo->prepare($sql);
+      return $stmt->execute([
+        'id'          => $id,
+        'title'       => $product->title,
+        'description' => $product->description,
+        'thumbnail'   => $product->thumbnail,
+        'price'       => $product->price,
+        'sale_price'  => $product->sale_price,
       ]);
    }
 }

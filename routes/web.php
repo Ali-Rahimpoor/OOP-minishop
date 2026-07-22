@@ -8,3 +8,5 @@ $router->get('/product', [ProductController::class, 'index']);
 $router->get('/login', [AdminAuthController::class, 'show']);
 $router->post('/products/store',[ProductController::class,'store']);
 $router->post('/login', [AdminAuthController::class, 'login']);
+$router->get('/products/{id}',[ProductController::class,'index']);
+$router->post('/products/{id}',[ProductController::class,'update']);

@@ -8,14 +8,14 @@ class Product{
    public int $price = 0;
    public int $sale_price = 0;
    public int $stock = 0;
-   public string $status = 'pending';
+   public string $status = '';
    public ?string $created_at = null;
    public ?string $updated_at = null;
 
     public static function fromArray(array $row): self
    {
       $product = new self();
-      $product->id               = isset($row['id']) ? (int) $row['id'] : null;
+      $product->id               = isset($row['ID']) ? (int) $row['ID'] : null;
       $product->title            = $row['title'] ?? '';
       $product->description      = $row['description'] ?? '';
       $product->thumbnail        = $row['thumbnail'] ?? '';

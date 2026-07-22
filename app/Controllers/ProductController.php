@@ -92,4 +92,13 @@ class ProductController extends Controller{
       $this->redirect(site_url('products/').$id . "?action=edited");
 
    }
+   public function delete(int $id):void
+   {
+      $product = $this->productsRepo->findById($id);
+      if(!$product){
+         die("NOT FOUND PRODUCT");
+      }
+      $this->productsRepo->delete($id);
+      $this->redirect(site_url('?action=deleted'));
+   }
 }

@@ -78,7 +78,7 @@ $status = $_POST['status'] ?? ($is_edit ? $product->status : "draft");
             <?php
             $thumbnail = $is_edit && !empty($product->thumbnail)
                 ? site_url('storage/uploads/' . $product->thumbnail)
-                : site_url('storage/uploads/no-product.jpg');
+                : site_url('public/uploads/no-product.jpg');
             ?>
 
             <img

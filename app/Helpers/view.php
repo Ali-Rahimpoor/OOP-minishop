@@ -31,7 +31,7 @@ function to_jalali($date_string){
 function product_img_src($img_src) {
     // اگر ورودی خالی یا null بود
     if (empty($img_src)) {
-        return site_url('storage/uploads/no-img.webp');
+        return site_url('public/uploads/no-img.webp');
     }
         
     $full_path = BASE_PATH . '/storage/uploads/' . $img_src;

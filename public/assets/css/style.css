@@ -2,6 +2,15 @@
     font-family: yekan;
     src: url('../font/yekan.woff') format('woff');
 }
+.alert{
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    background-color: #1960e9;
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+}
 :root {
     --color-primary: #1960e9;
     --color-primary-hover: #005ca9;

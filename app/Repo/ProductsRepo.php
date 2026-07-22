@@ -92,5 +92,10 @@ class ProductsRepo
         'status'      => $product->status
       ]);
    }
-   
+   public function delete(int $id):bool
+   {
+      $sql = "DELETE FROM products WHERE ID = :id";
+      $stmt = $this->pdo->prepare($sql);
+      return $stmt->execute(['id'=>$id]);
+   }
 }

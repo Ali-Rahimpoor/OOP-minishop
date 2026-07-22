@@ -12,7 +12,11 @@
   <link rel="stylesheet" href="<?php echo   'http://localhost/oop-minishop/public/assets/css/style.css' ;?>">
 </head>
 <body>
-
+  <?php if(isset($_GET['action'])){
+    if($_GET['action']==='deleted'){
+      echo "<span class='alert'> محصول با موفقیت حذف شد✅</span>";
+    }
+  } ?>
   <div class="box-container">
     <header>
       <div class="title">

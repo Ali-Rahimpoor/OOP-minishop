@@ -104,5 +104,5 @@ class ProductController extends Controller{
       }
       $this->productsRepo->delete($id);
       $this->redirect(site_url('?action=deleted'));
-   }
+   }   
 }

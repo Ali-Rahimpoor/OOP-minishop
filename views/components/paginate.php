@@ -1,33 +1,43 @@
 <div class="result">
-        کل نتایج: 23,623 | صفحه 5 از 36
+    کل نتایج: <?= number_format($total) ?> | صفحه <?= $page ?> از <?= $lastPage ?>
 </div>
+
 <div class="pagination">
-        <a href="#" class="prev">
-          <svg xmlns="http://www.w3.org/2000/svg" width="8.597" height="17.337" viewBox="0 0 8.597 17.337">
-            <path id="arrow-right-3" d="M16.012,20.67a.742.742,0,0,0,.53-.22.754.754,0,0,0,0-1.06l-6.52-6.52a1.231,1.231,0,0,1,0-1.74l6.52-6.52a.75.75,0,0,0-1.06-1.06l-6.52,6.52a2.724,2.724,0,0,0-.8,1.93,2.683,2.683,0,0,0,.8,1.93l6.52,6.52A.786.786,0,0,0,16.012,20.67Z" transform="translate(-8.162 -3.333)" fill="#292d32"/>
-          </svg>
-        </a>
-        <a href="#">
-          1
-        </a>
-        <a href="#">
-          2
-        </a>
-        <a href="#">
-          3
-        </a>
-        <span>
-        4
-      </span>
-        <a href="#">
-          ...
-        </a>
-        <a href="#">
-          23
-        </a>
-        <a href="#" class="next">
-          <svg xmlns="http://www.w3.org/2000/svg" width="8.597" height="17.337" viewBox="0 0 8.597 17.337">
-            <path id="arrow-right-3" d="M8.91,20.67a.742.742,0,0,1-.53-.22.754.754,0,0,1,0-1.06l6.52-6.52a1.231,1.231,0,0,0,0-1.74L8.38,4.61A.75.75,0,1,1,9.44,3.55l6.52,6.52a2.724,2.724,0,0,1,.8,1.93,2.683,2.683,0,0,1-.8,1.93L9.44,20.45A.786.786,0,0,1,8.91,20.67Z" transform="translate(-8.162 -3.333)" fill="#292d32"/>
-          </svg>
-        </a>
+
+    <?php if ($page > 1): ?>
+        <a href="<?= htmlspecialchars(pageLink($page - 1, $filters)) ?>" class="prev">قبلی</a>
+    <?php endif; ?>
+
+    <?php
+    // یه بازه‌ی ساده: صفحه‌ی فعلی، دو تا قبل و دو تا بعدش
+    $start = max(1, $page - 2);
+    $end   = min($lastPage, $page + 2);
+    ?>
+
+    <?php if ($start > 1): ?>
+        <a href="<?= htmlspecialchars(pageLink(1, $filters)) ?>">1</a>
+        <?php if ($start > 2): ?>
+            <span>...</span>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <?php for ($i = $start; $i <= $end; $i++): ?>
+        <?php if ($i === $page): ?>
+            <span><?= $i ?></span>
+        <?php else: ?>
+            <a href="<?= htmlspecialchars(pageLink($i, $filters)) ?>"><?= $i ?></a>
+        <?php endif; ?>
+    <?php endfor; ?>
+
+    <?php if ($end < $lastPage): ?>
+        <?php if ($end < $lastPage - 1): ?>
+            <span>...</span>
+        <?php endif; ?>
+        <a href="<?= htmlspecialchars(pageLink($lastPage, $filters)) ?>"><?= $lastPage ?></a>
+    <?php endif; ?>
+
+    <?php if ($page < $lastPage): ?>
+        <a href="<?= htmlspecialchars(pageLink($page + 1, $filters)) ?>" class="next">بعدی</a>
+    <?php endif; ?>
+
 </div><!--.pagination-->

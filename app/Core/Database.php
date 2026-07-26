@@ -20,8 +20,7 @@ class Database
             Config::get('database', 'charset')
         );
 
-        try {
-
+        try {            
             $this->connection = new PDO(
                 $dsn,
                 Config::get('database', 'username'),

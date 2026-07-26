@@ -1,5 +1,8 @@
 <?php
 namespace App\Models;
+
+use App\Core\Database;
+
 class User {
    public ?int $id = null;
    public string $username = '';
@@ -18,12 +21,23 @@ class User {
    public static function fromArray(array $row): User
    {
       $user = new User();
-      $user->id         = isset($row['id']) ? (int) $row['id'] : null;
+      $user->id         = isset($row['ID']) ? (int) $row['ID'] : null;
       $user->username   = $row['username'] ?? '';
       $user->password   = $row['password'] ?? '';
       $user->role       = $row['role'] ?? 'user';
-      $user->created_at = $row['created_at'] ?? null;
+      $user->created_at = $row['created_at'] ?? null;      
+      return $user;  
+   }
+   public static function findByUsername(string $username): ?self
+   {
+      $pdo = Database::getInstance()->getConnection();
+      $stmt = $pdo->prepare('SELECT * FROM users WHERE username = :username LIMIT 1');
+      $stmt -> execute(['username'=>$username]);
+      $row = $stmt->fetch();
+      if(!$row){
+         return null;
+      }
+      return User::fromArray($row);
 
-      return $user;
    }
 }

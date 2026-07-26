@@ -4,11 +4,6 @@ namespace App\Core;
 
 use App\Models\User;
 
-/**
- * مدیریت نشست کاربر (لاگین/لاگ‌اوت) بر پایه Session.
- * در فاز یک، تنها کاربری که در سیستم لاگین می‌شود ادمین است،
- * اما ساختار برای پشتیبانی از نقش‌های دیگر در آینده آماده است.
- */
 class Auth
 {
     public static function start(): void
@@ -16,9 +11,10 @@ class Auth
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-    }    
+    }
+
     public static function login(User $user): void
-    {
+    {        
         self::start();
         session_regenerate_id(true);
         $_SESSION['user_id']  = $user->id;
@@ -57,10 +53,7 @@ class Auth
         return $_SESSION['username'] ?? null;
     }
 
-    /**
-     * اگر کاربر ادمین نبود، به صفحه لاگین هدایت می‌شود و اجرای اسکریپت متوقف می‌شود.
-     */
-    public static function requireAdmin(string $redirectTo = 'login.php'): void
+    public static function requireAdmin(string $redirectTo = '/oop-minishop/login'): void
     {
         if (!self::isAdmin()) {
             header('Location: ' . $redirectTo);

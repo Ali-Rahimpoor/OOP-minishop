@@ -2,20 +2,21 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\View;
 use App\Models\Product;
 use App\Repo\ProductsRepo;
 use App\Services\FileUploadService;
 use App\Validators\ProductValidator;
-
+use App\Core\Auth;
 class ProductController extends Controller{
    private ProductsRepo $productsRepo;
    public function __construct()
    {
+      Auth::requireAdmin();
       $this->productsRepo = new ProductsRepo();
    }
    public function index(int|null $id=null):void
-   {            
+   {           
+      
       if(!isset($id)){         
          $this->view('products/add-edit');
       }else{
@@ -29,6 +30,7 @@ class ProductController extends Controller{
    }
    public function store():void
    {
+      
       $data = $_POST;
       $erros = ProductValidator::validate($data);
       if(!empty($erros)){
@@ -50,6 +52,7 @@ class ProductController extends Controller{
    }
    public function update(int $id):void
    {
+      
       $product = $this->productsRepo->findById($id);
       
       if(!$product){
@@ -94,6 +97,7 @@ class ProductController extends Controller{
    }
    public function delete(int $id):void
    {
+      
       $product = $this->productsRepo->findById($id);
       if(!$product){
          die("NOT FOUND PRODUCT");

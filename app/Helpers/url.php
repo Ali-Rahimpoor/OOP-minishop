@@ -2,7 +2,7 @@
 
 function site_url(string $path = ''): string
 {
-    return 'http://localhost/oop-minishop/' . $path ;
+    return htmle( 'http://localhost/oop-minishop/' . $path );
 }
 function sortLinks(string $column, string $label,array $filters):string
 {

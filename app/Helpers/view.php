@@ -44,3 +44,7 @@ function product_img_src($img_src) {
         return site_url('storage/uploads/no-image.webp');
     }
 }
+function htmle(string $value):string
+{
+    return htmlspecialchars($value,ENT_QUOTES,'UTF-8');
+}

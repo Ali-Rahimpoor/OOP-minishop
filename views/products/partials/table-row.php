@@ -10,27 +10,27 @@
       <img class="product-thumbnail" src="<?php echo product_img_src($product->thumbnail); ?>"
             alt="">
       <p class="product-title">
-         <?php echo $product->title; ?>
+         <?php echo htmle( $product->title );?>
       </p>
    </div>
    </td>
    <td>
-   <del><?php echo $product->price; ?></del>
-   <ins><?php echo $product->sale_price; ?></ins>
+   <del><?php echo htmle( $product->price); ?></del>
+   <ins><?php echo htmle( $product->sale_price); ?></ins>
    </td>
    <td>
-         <?php echo show_percent($product->price,$product->sale_price); ?> 
+         <?php echo htmle( show_percent($product->price,$product->sale_price)); ?> 
    </td>
    <td>
-   <?php echo $product->stock ?>
+   <?php echo htmle( $product->stock )?>
    </td>
    <td>
    <div class="product-status">
-      <?php echo get_status_label($product->status); ?>
+      <?php echo htmle( get_status_label($product->status)); ?>
    </div>
    </td>
    <td>
-   <?php echo to_jalali($product->updated_at); ?>
+   <?php echo htmle( to_jalali($product->updated_at)); ?>
    </td>
    <td>
    <div class="table-flex-col">

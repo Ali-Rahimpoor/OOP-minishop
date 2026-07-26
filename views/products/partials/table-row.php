@@ -1,6 +1,7 @@
 <?php
 /**
 * @var Product $product
+* @var int $key
 */
 ?>
 <tr>

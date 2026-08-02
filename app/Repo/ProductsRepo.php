@@ -1,30 +1,19 @@
 <?php
 namespace App\Repo;
+
+use App\Core\Cache\FileCache;
 use App\Models\Product;
 use App\Core\Database;
 use PDO;
 class ProductsRepo
 {
    private PDO $pdo;
+   private FileCache $cache;
    public function __construct()
    {
       $this->pdo = Database::getInstance()->getConnection();
-   }
-   public function latest(int $limit = 10):array
-   {
-      $sql = "SELECT * FROM products ORDER BY ID DESC LIMIT :limit";
-      
-      $stmt = $this->pdo->prepare($sql);
-      $stmt->bindValue(':limit',$limit,PDO::PARAM_INT);
-      $stmt->execute();
-      $products = [];
-      $rows = $stmt->fetchAll();
-      foreach($rows as $row){        
-          $products[] = Product::fromArray($row);
-      }      
-      
-      return $products;
-   }
+      $this->cache = new FileCache(BASE_PATH . '/storage/cache');
+   }   
    public function create(Product $product):bool
    {
       $sql = "
@@ -48,7 +37,8 @@ class ProductsRepo
                :status
             )";
       $stmt = $this->pdo->prepare($sql);
-      return $stmt->execute([
+      
+     $res= $stmt->execute([
          ':title' => $product->title,
          ':description' => $product->description,
          ':thumbnail'   => $product->thumbnail,
@@ -57,6 +47,8 @@ class ProductsRepo
          ':stock'       => $product->stock,
          ':status'      => $product->status
       ]);
+      $this->cache->deleteByPrefix('products_');
+      return $res;
    }
    public function findById(int $id): ?Product
    {
@@ -83,7 +75,7 @@ class ProductsRepo
       status  = :status
       WHERE ID = :id";
       $stmt = $this->pdo->prepare($sql);
-      return $stmt->execute([
+      $res = $stmt->execute([
         'id'          => $id,
         'title'       => $product->title,
         'description' => $product->description,
@@ -93,18 +85,38 @@ class ProductsRepo
         'status'      => $product->status,
         'stock'       => $product->stock
       ]);
+      $this->cache->deleteByPrefix('products_');
+      return $res;
    }
    public function delete(int $id):bool
    {
       $sql = "DELETE FROM products WHERE ID = :id";
       $stmt = $this->pdo->prepare($sql);
-      return $stmt->execute(['id'=>$id]);
+      $res = $stmt->execute(['id'=>$id]);
+      $this->cache->deleteByPrefix('products_');
+      return $res;
    }
    public function filter(array $filters, bool $publicOnly = false, int $page = 1, int $perPage = 12): array
-   {
+   {  
       $where  = [];
       $params = [];
-
+      // CACHE
+      $keyData = [
+         'filters'=>$filters,
+         'publicOnly'=>$publicOnly,
+         'page' => $page,
+         'perPage'=>$perPage
+      ];
+      $key = 'products_' . md5(json_encode($keyData));
+      
+      $cachedProducts = $this->cache->get($key);
+      if($cachedProducts !== null){
+         return array_map(
+            fn(array $item) =>  Product::fromArray($item),
+            $cachedProducts
+         );
+      }
+      // END CACHE
       if ($publicOnly) {
          $where[] = "status = 'publish'";
       } elseif (!empty($filters['status'])) {
@@ -157,10 +169,11 @@ class ProductsRepo
       $sql .= ' LIMIT :limit OFFSET :offset';
 
       $stmt = $this->pdo->prepare($sql);
-
-      foreach ($params as $key => $value) {
-         $stmt->bindValue(':' . $key, $value);
+      
+      foreach ($params as $param => $value) {
+         $stmt->bindValue(':' . $param, $value);
       }
+      
 
       $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
       $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -171,7 +184,11 @@ class ProductsRepo
       foreach ($stmt->fetchAll() as $row) {
          $products[] = Product::fromArray($row);
       }
-
+      $cacheData = array_map(
+         fn(Product $product) => $product->toArray(),
+         $products
+      );      
+      $this->cache->set($key,$cacheData);
       return $products;
    }
    public function countFiltered(array $filters, bool $publicOnly = false): int

@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ورود ادمین | Mini Shop</title>
+    <title>ثبت نام  | Mini Shop</title>
     <style>
         /* استایل کلی فرم */
         form {
@@ -126,7 +126,7 @@
         <p style="color:red;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
-    <form method="POST" action="<?= site_url('login'); ?>">
+    <form method="POST" action="<?= site_url('register'); ?>">
         <div>
             <label>نام کاربری</label><br>
             <input type="text" name="username">
@@ -135,9 +135,8 @@
             <label>رمز عبور</label><br>
             <input type="password" name="password">
         </div>
-        <button type="submit">ورود</button>        
+        <button type="submit">ثبت نام</button>        
     </form>
     
-
 </body>
 </html>

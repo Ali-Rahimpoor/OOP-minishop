@@ -14,9 +14,34 @@ class User {
    {
       return $this->role === "admin";
    }
-   public function verifyPassword(string $plainPassword): bool
+   public static function create(array $data):?self{      
+      $pdo = Database::getInstance()->getConnection();
+      $sql = "INSERT INTO users (username,password,role) VALUES (:username,:password,:role)";
+      $stmt = $pdo->prepare($sql);
+      $ok = $stmt->execute([
+            'username'=>$data['username'],
+            'password' => $data['password'],
+            'role'     => $data['role'],
+         ]);
+
+      if (!$ok) {
+         return null;
+      }
+
+      $id = (int) $pdo->lastInsertId();
+      return self::findById($id);
+   }
+
+   public static function findById(int $id): ?self
    {
-      return password_verify($plainPassword, $this->password);
+      $pdo = Database::getInstance()->getConnection();
+      $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
+      $stmt->execute(['id' => $id]);
+      $row = $stmt->fetch();
+      if (!$row) {
+         return null;
+      }
+      return self::fromArray($row);
    }
    public static function fromArray(array $row): User
    {

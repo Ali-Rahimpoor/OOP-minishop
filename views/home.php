@@ -21,6 +21,7 @@
     <header>
       <div class="title">
         <h1>لیست محصولات</h1>
+        <a href="<?= site_url('register'); ?>">ثبت نام</a>
         <?php if(is_admin()): ?>
           <form action="<?= site_url('logout') ?>" method="post">
             <button type="submit">خروج</button>

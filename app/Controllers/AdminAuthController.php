@@ -16,6 +16,37 @@ class AdminAuthController extends Controller
         
         $this->view('login');
     }
+    public function showregister():void
+    {
+        $this->view('register');
+    }
+    public function register():void
+    {
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        if ($username === '' || $password === '') {
+            $this->view('register', ['error' => 'نام کاربری و رمز عبور را وارد کنید.']);
+            return;
+        }
+        $user = User::findByUsername($username);
+        if($user){
+            $this->view('register',['error'=>'نام کاربری تکراری هست']);
+        }
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+
+        $user = User::create([
+            'username' => $username,
+            'password' => $hashed,
+            'role'     => 'user'
+        ]);
+
+        if (!$user) {
+            $this->view('register', ['error' => 'خطایی رخ داد، دوباره تلاش کنید.']);
+            return;
+        }        
+        $this->redirect('/');
+    }
 
     public function login(): void
     {

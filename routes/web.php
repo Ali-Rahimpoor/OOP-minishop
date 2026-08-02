@@ -11,7 +11,9 @@ $router->get('/products/{id}',[ProductController::class,'index']);
 $router->post('/products/{id}',[ProductController::class,'update']);
 $router->post('/delete/{id}',[ProductController::class,'delete']);
 
+$router->get('/register',[AdminAuthController::class,'showregister']);
 $router->get('/login', [AdminAuthController::class, 'show']);
+$router->post('/register',[AdminAuthController::class,'register']);
 $router->post('/login', [AdminAuthController::class, 'login']);
 $router->post('/logout', [AdminAuthController::class, 'logout']);
 $router->get('/admin', [AdminController::class, 'dashboard']);

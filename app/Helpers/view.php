@@ -1,4 +1,6 @@
 <?php
+
+use App\Core\Auth;
 use Hekmatinasser\Verta\Verta;
 function discount_percent(int $price, int $sale_price): int {
     if ($price <= 0 || $sale_price < 0 || $sale_price > $price) {        
@@ -47,4 +49,7 @@ function product_img_src($img_src) {
 function htmle(string $value):string
 {
     return htmlspecialchars($value,ENT_QUOTES,'UTF-8');
+}
+function is_admin(){
+    return Auth::isAdmin();
 }

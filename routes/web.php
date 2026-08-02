@@ -13,5 +13,5 @@ $router->post('/delete/{id}',[ProductController::class,'delete']);
 
 $router->get('/login', [AdminAuthController::class, 'show']);
 $router->post('/login', [AdminAuthController::class, 'login']);
-$router->get('/logout', [AdminAuthController::class, 'logout']);
+$router->post('/logout', [AdminAuthController::class, 'logout']);
 $router->get('/admin', [AdminController::class, 'dashboard']);

@@ -21,6 +21,11 @@
     <header>
       <div class="title">
         <h1>لیست محصولات</h1>
+        <?php if(is_admin()): ?>
+          <form action="<?= site_url('logout') ?>" method="post">
+            <button type="submit">خروج</button>
+          </form>
+        <?php endif; ?>
         <p>از این بخش میتوانید محصولات فعلی را ویرایش یا محصول جدید ثبت کنید</p>
       </div>
       <div class="table-button">

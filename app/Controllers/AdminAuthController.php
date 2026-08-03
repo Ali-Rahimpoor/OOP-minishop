@@ -45,7 +45,7 @@ class AdminAuthController extends Controller
             $this->view('register', ['error' => 'خطایی رخ داد، دوباره تلاش کنید.']);
             return;
         }        
-        $this->redirect('/');
+        $this->redirect(site_url('/?action=register'));
     }
 
     public function login(): void
@@ -54,7 +54,7 @@ class AdminAuthController extends Controller
         $password = $_POST['password'] ?? '';
 
         if ($username === '' || $password === '') {
-            $this->view('login', ['error' => 'نام کاربری و رمز عبور را وارد کنید.']);
+            $this->view('login', ['error' => 'نام کاربری و رمز عبور را وارد کنید.']);            
             return;
         }
 
@@ -68,13 +68,13 @@ class AdminAuthController extends Controller
 
         Auth::login($user);
         
-        $this->redirect('admin');
+        $this->redirect(site_url('/?action=login'));
     }
 
     public function logout(): void
     {
         Auth::logout();
         
-        $this->redirect('login');
+        $this->redirect(site_url('/?action=logout'));
     }
 }

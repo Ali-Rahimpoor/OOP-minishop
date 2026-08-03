@@ -15,6 +15,15 @@
   <?php if(isset($_GET['action'])){
     if($_GET['action']==='deleted'){
       echo "<span class='alert'> محصول با موفقیت حذف شد✅</span>";
+    }    
+    if($_GET['action']==='register'){
+      echo "<span class='alert'> ثبت نام با موفقیت انجام شد✅</span>";
+    }
+    if($_GET['action']==='login'){
+      echo "<span class='alert'> ورود با موفقیت انجام شد✅</span>";
+    }
+    if($_GET['action']==='logout'){
+      echo "<span class='alert'>خروج با موفقیت انجام شد ✅</span>";
     }
   } ?>
   <div class="box-container">
@@ -22,11 +31,11 @@
       <div class="title">
         <h1>لیست محصولات</h1>
         <a href="<?= site_url('register'); ?>">ثبت نام</a>
-        <?php if(is_admin()): ?>
-          <form action="<?= site_url('logout') ?>" method="post">
+        
+        <form action="<?= site_url('logout') ?>" method="post">
             <button type="submit">خروج</button>
-          </form>
-        <?php endif; ?>
+        </form>
+
         <p>از این بخش میتوانید محصولات فعلی را ویرایش یا محصول جدید ثبت کنید</p>
       </div>
       <div class="table-button">

@@ -44,6 +44,15 @@ class Auth
         self::start();
         return self::check() && ($_SESSION['role'] ?? '') === 'admin';
     }
+    public static function user_id(): ?int
+    {
+        self::start();
+        if(!$_SESSION['user_id']){
+            header('Location: ' . '/oop-minishop/login');
+            exit;
+        }
+        return $_SESSION['user_id'];
+    }
     public static function username(): ?string
     {
         self::start();

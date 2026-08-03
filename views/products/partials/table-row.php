@@ -35,6 +35,7 @@
    </td>
    <td>
    <div class="table-flex-col">
+      <?php if(is_admin()): ?>
       <a href="<?php echo site_url('products/' . $product->id) ?>" class="btn-icon edit-product">
          <svg xmlns="http://www.w3.org/2000/svg" width="17.502" height="18.094" viewBox="0 0 17.502 18.094">
          <g id="edit-2" transform="translate(-3.252 -1.426)">
@@ -52,6 +53,14 @@
             </svg>
          </button>
       </form>
+      <?php endif; ?>
+      <?php if(!is_admin()): ?>
+      <form action="<?= site_url('cart/add/'.$product->id) ?>" method='post'>
+         <button class="btn btn-primary">
+            خرید
+         </button>
+      </form>
+      <?php endif; ?>
    </div>
    </td>
 </tr>

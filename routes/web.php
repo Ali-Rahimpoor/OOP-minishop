@@ -4,6 +4,8 @@ use App\Controllers\HomeController;
 use App\Controllers\AdminAuthController;
 use App\Controllers\ProductController;
 use App\Controllers\AdminController;
+use App\Controllers\CartController;
+
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/product', [ProductController::class, 'index']);
 $router->post('/products/store',[ProductController::class,'store']);
@@ -17,3 +19,6 @@ $router->post('/register',[AdminAuthController::class,'register']);
 $router->post('/login', [AdminAuthController::class, 'login']);
 $router->post('/logout', [AdminAuthController::class, 'logout']);
 $router->get('/admin', [AdminController::class, 'dashboard']);
+
+$router->post('/cart/add/{id}',[CartController::class,'add']);
+$router->get('/cart',[CartController::class,'index']);

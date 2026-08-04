@@ -20,5 +20,9 @@ $router->post('/login', [AdminAuthController::class, 'login']);
 $router->post('/logout', [AdminAuthController::class, 'logout']);
 $router->get('/admin', [AdminController::class, 'dashboard']);
 
-$router->post('/cart/add/{id}',[CartController::class,'add']);
 $router->get('/cart',[CartController::class,'index']);
+$router->post('/cart/add/{id}',[CartController::class,'add']);
+$router->post('/cart/update/{id}',[CartController::class,'update']);
+
+$router->post('/cart/remove/{id}',[CartController::class,'remove']);
+$router->post('/cart/checkout',[CartController::class,'checkout']);

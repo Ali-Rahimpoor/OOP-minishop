@@ -53,3 +53,7 @@ function htmle(string $value):string
 function is_admin(){
     return Auth::isAdmin();
 }
+function toToman(int $rial):int
+{
+    return (int) round($rial/10);
+}

@@ -35,6 +35,42 @@ class CartController extends Controller
     }
     public function index():void
     {
-        $this->cartService->index();
+        $items = $this->cartService->getItems(Auth::user_id());
+        $subtotal = $this->cartService->getSubtotal($items);
+        $this->view('cart/index',compact('items','subtotal'));
+    }
+    public function update(int $itemId):void
+    {
+        try{
+            $quantity = (int) ($_POST['quantity'] ?? 0);
+            $this->cartService->updateQuantity(Auth::user_id(),$itemId,$quantity);
+            $_SESSION['success'] = "سبد خرید با موفقیت بروز شد";
+        }catch(Exception $e){
+            $_SERVER['error'] = $e->getMessage();
+        }
+        $this->redirect(site_url('cart'));
+    }
+    public function remove(int $itemId):void
+    {
+        try{
+            $this->cartService->removeItem(Auth::user_id(),$itemId);
+            $_SESSION['success'] = 'محصول با موفقیت حذف شد';            
+        }catch(Exception $e){
+            $_SESSION['error'] = $e->getMessage();
+        }
+        $this->redirect(site_url('cart'));
+    }
+    public function checkout(): void
+    {
+        $errors = $this->cartService->validateCart(Auth::user_id());
+
+        if (!empty($errors)) {
+            $_SESSION['cart_errors'] = $errors;
+            $this->redirect(site_url('cart'));
+            return;
+        }
+        
+        $_SESSION['success'] = 'سبد خرید شما معتبر است، آماده‌ی ادامه‌ی فرآیند خرید هستید';
+        $this->redirect(site_url('cart'));
     }
 }

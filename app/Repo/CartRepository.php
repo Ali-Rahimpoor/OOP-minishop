@@ -39,6 +39,24 @@ class CartRepository
       $cart->status = 'active';
       return $cart;
     }
+    public function findItemById(int $itemId,int $cartId):CartItem
+    {
+      $sql = "SELECT * FROM cart_items WHERE id = :id AND cart_id = :cart_id LIMIT 1";
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->bindValue(':id',$itemId,PDO::PARAM_INT);
+      $stmt->bindValue(':cart_id',$cartId,PDO::PARAM_INT);
+      $stmt->execute();
+      $stmt->setFetchMode(PDO::FETCH_CLASS,CartItem::class);
+      $item=$stmt->fetch();
+      return $item ?: null;
+    }
+    public function deleteItem(int $itemId):bool
+    {
+      $sql = "DELETE FROM cart_items WHERE id = :id";
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->bindValue(":id",$itemId,PDO::PARAM_INT);
+      return $stmt->execute();
+    }
     public function findItem (int $cartId,int $productId):?CartItem
     {
       $sql = "SELECT * FROM cart_items WHERE cart_id = :cart_id AND product_id = :product_id LIMIT 1";

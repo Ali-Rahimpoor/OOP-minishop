@@ -11,10 +11,11 @@ abstract class Controller
 
     protected function redirect(string $url): never
     {
-        if($url === '/'){
-            $url = site_url('');            
+        if($url === '/'){            
+            header('Location:' . site_url('') );
+            exit;         
         }
-        header("Location: {$url}");
+        header("Location: " . site_url($url));
         exit;
     }
 }

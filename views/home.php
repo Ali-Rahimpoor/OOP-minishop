@@ -31,10 +31,14 @@
       <div class="title">
         <h1>لیست محصولات</h1>
         <a href="<?= site_url('register'); ?>">ثبت نام</a>
-        
+        <?php  if(is_login()): ?> 
         <form action="<?= site_url('logout') ?>" method="post">
-            <button type="submit">خروج</button>
+            <button class="btn" type="submit">خروج</button>
         </form>
+        <form action='<?= site_url('cart') ?>' method="get">
+          <button class="btn" type="submit">سبد خرید</button>
+        </form>
+        <?php endif;?>
 
         <p>از این بخش میتوانید محصولات فعلی را ویرایش یا محصول جدید ثبت کنید</p>
       </div>

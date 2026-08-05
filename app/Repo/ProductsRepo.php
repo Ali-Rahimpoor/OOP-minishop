@@ -59,8 +59,7 @@ class ProductsRepo
       $product = $stmt->fetch();
       if(!$product){
          return null;
-      }
-      // print_r($product);exit;
+      }      
       return Product::fromArray($product);
    }
    public function update(int $id,Product $product):bool

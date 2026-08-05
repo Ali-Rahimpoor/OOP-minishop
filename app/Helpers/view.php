@@ -36,14 +36,13 @@ function product_img_src($img_src) {
         return site_url('public/uploads/no-img.webp');
     }
         
-    $full_path = BASE_PATH . '/storage/uploads/' . $img_src;
-    // print_r($full_path);exit;
+    $full_path = BASE_PATH . '/storage/uploads/' . $img_src;    
     
     // بررسی وجود فایل
     if (file_exists($full_path)) {
         return site_url('storage/uploads/' . $img_src);
     } else {
-        return site_url('storage/uploads/no-image.webp');
+        return site_url('public/uploads/no-image.webp');
     }
 }
 function htmle(string $value):string
@@ -52,6 +51,9 @@ function htmle(string $value):string
 }
 function is_admin(){
     return Auth::isAdmin();
+}
+function is_login(){
+    return Auth::check();
 }
 function toToman(int $rial):int
 {

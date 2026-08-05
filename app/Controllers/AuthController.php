@@ -4,20 +4,22 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Auth;
-use App\Models\User;
+use App\Repo\UsersRepository;
 
-class AdminAuthController extends Controller
-{
-    public function show(): void
+class AuthController extends Controller
+{    
+    public function showLogin(): void
     {
         if (Auth::isAdmin()) {
-            $this->redirect('admin');
+            $this->redirect('?action=admin');
         }
-        
         $this->view('login');
     }
-    public function showregister():void
+    public function showRegister():void
     {
+        if(Auth::check()){
+            Auth::logout();     
+        }
         $this->view('register');
     }
     public function register():void
@@ -29,13 +31,15 @@ class AdminAuthController extends Controller
             $this->view('register', ['error' => 'نام کاربری و رمز عبور را وارد کنید.']);
             return;
         }
-        $user = User::findByUsername($username);
+        $repo = new UsersRepository();
+        $user = $repo->findByUsername($username);
         if($user){
             $this->view('register',['error'=>'نام کاربری تکراری هست']);
+            exit;
         }
         $hashed = password_hash($password, PASSWORD_DEFAULT);
 
-        $user = User::create([
+        $user = $repo->create([
             'username' => $username,
             'password' => $hashed,
             'role'     => 'user'
@@ -45,7 +49,8 @@ class AdminAuthController extends Controller
             $this->view('register', ['error' => 'خطایی رخ داد، دوباره تلاش کنید.']);
             return;
         }        
-        $this->redirect(site_url('/?action=register'));
+        Auth::login($user);
+        $this->redirect('?action=register');
     }
 
     public function login(): void
@@ -57,8 +62,9 @@ class AdminAuthController extends Controller
             $this->view('login', ['error' => 'نام کاربری و رمز عبور را وارد کنید.']);            
             return;
         }
+        $repo = new UsersRepository();
 
-        $user = User::findByUsername($username);
+        $user = $repo->findByUsername($username);
 
         if (!$user || !password_verify($password, $user->password)) {
             
@@ -68,13 +74,13 @@ class AdminAuthController extends Controller
 
         Auth::login($user);
         
-        $this->redirect(site_url('/?action=login'));
+        $this->redirect('?action=login');
     }
 
     public function logout(): void
     {
         Auth::logout();
         
-        $this->redirect(site_url('/?action=logout'));
+        $this->redirect('?action=logout');
     }
 }

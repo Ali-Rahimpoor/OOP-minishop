@@ -15,8 +15,7 @@ class ProductController extends Controller{
       $this->productsRepo = new ProductsRepo();
    }
    public function index(int|null $id=null):void
-   {           
-      
+   {                 
       if(!isset($id)){         
          $this->view('products/add-edit');
       }else{
@@ -29,14 +28,13 @@ class ProductController extends Controller{
       }
    }
    public function store():void
-   {
-      
+   {      
       $data = $_POST;
       $erros = ProductValidator::validate($data);
       if(!empty($erros)){
          die(print_r($erros,true));
       }
-      $thumbnail = 'no-product.jpg';
+      $thumbnail = site_url('/public/uploads/no-product.jpg');
       if(isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_OK){
          $uploadService = new FileUploadService();
          $thumbnail = $uploadService->upload($_FILES['thumbnail'],['image/jpg','image/png','image/webp','image/jpeg']);
@@ -51,8 +49,7 @@ class ProductController extends Controller{
         
    }
    public function update(int $id):void
-   {
-      
+   {      
       $product = $this->productsRepo->findById($id);
       
       if(!$product){
@@ -92,7 +89,7 @@ class ProductController extends Controller{
       }
       $product = Product::fromArray($data);
       $this->productsRepo->update($id,$product);
-      $this->redirect(site_url('products/').$id . "?action=edited");
+      $this->redirect(('products/').$id . "?action=edited");
 
    }
    public function delete(int $id):void
@@ -103,6 +100,6 @@ class ProductController extends Controller{
          die("NOT FOUND PRODUCT");
       }
       $this->productsRepo->delete($id);
-      $this->redirect(site_url('?action=deleted'));
+      $this->redirect('?action=deleted');
    }   
 }

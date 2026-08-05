@@ -42,7 +42,7 @@ class Router
         $uri = parse_url($uri, PHP_URL_PATH);
 
         // حذف پوشه پروژه (در صورت اجرا داخل SubFolder)
-        $uri = str_replace('/oop-minishop', '', $uri);
+        $uri = str_replace(Config::get('app','site_base_url'), '', $uri);
 
         // یکسان سازی اسلش ها
         $uri = $this->normalize($uri);

@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 use App\Core\Config;
 use App\Core\Router;
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+use App\Core\Auth;
 Config::load();
-
 date_default_timezone_set(
     Config::get('app', 'timezone')
 );
-
+Auth::start();
 $router = new Router();
 require BASE_PATH . '/app/Helpers/url.php';
 require BASE_PATH . '/app/Helpers/view.php';

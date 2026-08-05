@@ -55,6 +55,12 @@ function is_admin(){
 function is_login(){
     return Auth::check();
 }
+function getUername(){
+    return Auth::username();
+}
+function getUserId(){
+    return Auth::user_id();
+}
 function toToman(int $rial):int
 {
     return (int) round($rial/10);

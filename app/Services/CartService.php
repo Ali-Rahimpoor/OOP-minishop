@@ -5,18 +5,19 @@ namespace App\Services;
 use App\Models\CartItem;
 use App\Repo\CartRepository;
 use App\Repo\ProductsRepo;
+use App\Validators\CartValidator;
 use Exception;
 
 class CartService 
 {
-    public function __construct(
+    public function __construct
+    (
         private CartRepository $cartRepository,
         private ProductsRepo $productsRepo
-    ) {
-    }
-    public function addProduct(int $userId,int $productId,int $quantity = 1): void
+    ) {}
+   public function addProduct(int $productId,int $quantity = 1): void
    {
-      
+      $userId = getUserId();
       if($quantity <= 0){
          throw new Exception('تعداد باید بیشتر از صفر باشه');
       }
@@ -31,7 +32,7 @@ class CartService
       if(!$cart){
          $cart = $this->cartRepository->create($userId);
       }
-      $item = $this->cartRepository->findItem($cart->id,$productId);
+      $item = $this->cartRepository->findItemByProductId($cart->id,$productId);
       $finalQuantity = $item ? ($item->quantity + $quantity) : $quantity;
       if($finalQuantity > $product->stock){
          throw new Exception('موجودی کافی نیست',$product->stock);
@@ -45,13 +46,14 @@ class CartService
       $item->cart_id = $cart->id;
       $item->product_id = $product->id;
       $item->quantity = $quantity;
-      $item->unit_price = $product->price;
+      $item->unit_price = $product->sale_price;
 
       $this->cartRepository->addItem($item);
       
    }
-   public function getItems(int $userId):array
+   public function getItems():array
    {
+      $userId = getUserId();
       return $this->cartRepository->getItems($userId);
    }
    public function getSubtotal(array $items):int
@@ -62,8 +64,9 @@ class CartService
       }
       return $subtotal;
    }
-   public function updateQuantity(int $userId,int $itemId,int $quantity):void
+   public function updateQuantity(int $itemId,int $quantity):void
    {
+      $userId = getUserId();
       $cart = $this->cartRepository->getActiveCartByUserId($userId);
       if (!$cart) {
             throw new Exception('سبد خریدی برای شما پیدا نشد');
@@ -92,8 +95,9 @@ class CartService
       $item->quantity = $quantity;
       $this->cartRepository->updateItem($item);
    }
-   public function removeItem(int $userId,int $itemId):void
+   public function removeItem(int $itemId):void
    {
+      $userId = getUserId();
       $cart = $this->cartRepository->getActiveCartByUserId($userId);
 
       if (!$cart) {
@@ -108,33 +112,9 @@ class CartService
 
       $this->cartRepository->deleteItem($item->id);
    }
-   public function validateCart(int $userId):array
-   {
-      $errors = [];
-      $items = $this->cartRepository->getItems($userId);
-      if (empty($items)) {
-            $errors[] = 'سبد خرید شما خالی است';
-            return $errors;
-        }
-
-      foreach ($items as $item) {
-         $product = $this->productsRepo->findById($item->product_id);
-
-         if (!$product) {
-               $errors[] = "محصول «{$item->title}» دیگر وجود ندارد و باید از سبد حذف شود";
-               continue;
-         }
-
-         if ($product->status !== 'publish') {
-               $errors[] = "محصول «{$item->title}» دیگر قابل فروش نیست و باید از سبد حذف شود";
-               continue;
-         }
-
-         if ($item->quantity > $product->stock) {
-               $errors[] = "موجودی «{$item->title}» کافی نیست. موجودی فعلی: {$product->stock}، تعداد در سبد شما: {$item->quantity}";
-         }
-      }
-
-      return $errors;
+   public function checkout(){
+      $userId = getUserId();
+      return CartValidator::validateCart($userId,$this->cartRepository,$this->productsRepo);
    }
+   
 }

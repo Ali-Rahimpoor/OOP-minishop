@@ -29,7 +29,11 @@
   <div class="box-container">
     <header>
       <div class="title">
-        <h1>لیست محصولات</h1>
+        <?php if(is_login()):?>
+          <h1>خوش آمدی <?= getUername(); ?></h1>
+        <?php else:?>
+          <h1>لیست محصولات</h1>
+        <?php endif; ?>
         <a href="<?= site_url('register'); ?>">ثبت نام</a>
         <?php  if(is_login()): ?> 
         <form action="<?= site_url('logout') ?>" method="post">

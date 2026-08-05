@@ -10,7 +10,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>سبد خرید</title>
-  <link rel="stylesheet" href="<?php echo 'http://localhost/oop-minishop/public/assets/css/style.css'; ?>">
+  <link rel="stylesheet" href="<?php echo site_url('/public/assets/css/style.css'); ?>">
   <style>
          /* --------------------------------------
          Root Variables & Reset
@@ -29,7 +29,7 @@
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       --radius: 8px;
       --transition: all 0.3s ease;
-      --font-family: 'Tahoma', 'Vazir', 'Segoe UI', sans-serif;
+      --font-family: 'yekan','Tahoma', 'Vazir', 'Segoe UI', sans-serif;
       }
 
       * {

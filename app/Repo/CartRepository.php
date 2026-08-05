@@ -57,7 +57,7 @@ class CartRepository
       $stmt->bindValue(":id",$itemId,PDO::PARAM_INT);
       return $stmt->execute();
     }
-    public function findItem (int $cartId,int $productId):?CartItem
+    public function findItemByProductId (int $cartId,int $productId):?CartItem
     {
       $sql = "SELECT * FROM cart_items WHERE cart_id = :cart_id AND product_id = :product_id LIMIT 1";
       $stmt = $this->pdo->prepare($sql);
@@ -99,7 +99,7 @@ class CartRepository
     }
     public function getItems(int $userId):array 
     {
-     $sql = " SELECT           
+      $sql = " SELECT           
           cart_items.id,
           cart_items.product_id,
           cart_items.quantity,

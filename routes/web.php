@@ -28,3 +28,4 @@ $router->post('/cart/add/{id}',[CartController::class,'add']);
 $router->post('/cart/update/{id}',[CartController::class,'update']);
 $router->post('/cart/remove/{id}',[CartController::class,'remove']);
 $router->post('/cart/checkout',[CartController::class,'checkout']);
+$router->post('/cart/place-order',[CartController::class,'placeOrder']);

@@ -5,6 +5,14 @@ declare(strict_types=1);
 use App\Core\Config;
 use App\Core\Router;
 use App\Core\Auth;
+use App\Core\Logger;
+set_exception_handler(function (\Throwable $e) {
+    Logger::exception($e);
+
+    http_response_code(500);
+    echo 'خطایی در سرور رخ داده است. لطفاً بعداً دوباره تلاش کنید.';
+});
+
 Config::load();
 date_default_timezone_set(
     Config::get('app', 'timezone')

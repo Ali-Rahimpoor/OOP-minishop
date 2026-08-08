@@ -2,19 +2,29 @@
 
 namespace App\Services;
 
+use App\Core\Database;
 use App\Models\CartItem;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Repo\CartRepository;
 use App\Repo\ProductsRepo;
 use App\Validators\CartValidator;
+use App\Repo\OrderRepository;
+use App\Core\Logger;
+use PDO;
 use Exception;
 
 class CartService 
 {
+    private PDO $pdo;
     public function __construct
     (
         private CartRepository $cartRepository,
-        private ProductsRepo $productsRepo
-    ) {}
+        private ProductsRepo $productsRepo,
+        private OrderRepository $orderRepository,
+    ) {
+      $this->pdo = Database::getInstance()->getConnection();
+    }
    public function addProduct(int $productId,int $quantity = 1): void
    {
       $userId = getUserId();
@@ -115,6 +125,58 @@ class CartService
    public function checkout(){
       $userId = getUserId();
       return CartValidator::validateCart($userId,$this->cartRepository,$this->productsRepo);
+   }
+   public function placeOrder(array $shippingInfo) : Order
+   {
+      $userId = getUserId();
+      $errors = $this->checkout();      
+      if(!empty($errors)){         
+         throw new Exception(implode(' | ', $errors));
+      }
+      $cart = $this->cartRepository->getActiveCartByUserId($userId);
+      $items = $this->cartRepository->getItems($userId);
+      $subtotal = $this->getSubtotal($items);
+      $discount = 0;
+      $shippingCost=0;
+      $totalPrice = $subtotal - $discount + $shippingCost;
+      $this->pdo->beginTransaction();
+      try{
+         $order = new Order();
+         $order->order_number    = $this->orderRepository->generateOrderNumber();
+         $order->user_id         = $userId;
+         $order->subtotal        = $subtotal;
+         $order->discount        = $discount;
+         $order->shipping_cost   = $shippingCost;
+         $order->total_price     = $totalPrice;
+         $order->address         = $shippingInfo['address'];
+         $order->receiver_name   = $shippingInfo['receiver_name'];
+         $order->receiver_mobile = $shippingInfo['receiver_mobile'];         
+         $order = $this->orderRepository->create($order);   
+         foreach ($items as $cartItem) {
+               $orderItem = new OrderItem();
+               $orderItem->order_id      = $order->id;
+               $orderItem->product_id    = $cartItem->product_id;
+               $orderItem->product_title = $cartItem->title;
+               $orderItem->quantity      = $cartItem->quantity;
+               $orderItem->unit_price    = $cartItem->unit_price;
+               $orderItem->total_price   = $cartItem->quantity * $cartItem->unit_price;
+
+               $this->orderRepository->addItem($orderItem);
+
+               $stockDecreased = $this->productsRepo->decreaseStock($cartItem->product_id, $cartItem->quantity);
+
+               if (!$stockDecreased) {
+                  throw new Exception("موجودی «{$cartItem->title}» در لحظه‌ی ثبت سفارش کافی نبود");
+               }            
+         }
+         $this->cartRepository->markAsOrdered($cart->id);
+         $this->pdo->commit();
+         return $order;
+      }catch (Exception $e) {
+            $this->pdo->rollBack();
+            Logger::exception($e, ['location' => 'CartService::placeOrder']);
+            throw $e;
+        }
    }
    
 }

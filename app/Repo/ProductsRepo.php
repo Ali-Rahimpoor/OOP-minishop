@@ -228,4 +228,14 @@ class ProductsRepo
 
       return (int) $stmt->fetchColumn();
    }
+   public function decreaseStock(int $productId, int $quantity): bool
+   {
+      $sql = "UPDATE products
+              SET stock = stock - ?
+              WHERE ID = ? AND stock >= ?";
+      $stmt = $this->pdo->prepare($sql);
+      $stmt->execute([$quantity, $productId, $quantity]);
+      $this->cache->deleteByPrefix('products_');
+      return $stmt->rowCount() > 0;
+   }
 }

@@ -121,4 +121,10 @@ class CartRepository
       $stmt->execute();
       return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+    public function markAsOrdered(int $cartId):bool
+    {
+      $sql = "UPDATE carts SET status = 'ordered' WHERE id = :id ";
+      $stmt = $this->pdo->prepare($sql);
+      return $stmt->execute(['id'=>$cartId]);
+    }
 }

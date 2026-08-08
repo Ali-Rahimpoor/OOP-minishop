@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Repo\CartRepository;
+use App\Repo\OrderRepository;
 use App\Repo\ProductsRepo;
 use App\Services\CartService;
 use Exception;
@@ -16,7 +17,8 @@ class CartController extends Controller
     {
         $this->cartService = new CartService(
             new CartRepository(),
-            new ProductsRepo()
+            new ProductsRepo(),
+            new OrderRepository(),
         );
     }
     public function add(int $productId):void
@@ -68,8 +70,31 @@ class CartController extends Controller
             $this->redirect('cart');
             return;
         }
-        
-        $_SESSION['success'] = 'سبد خرید شما معتبر است، آماده‌ی ادامه‌ی فرآیند خرید هستید';
-        $this->redirect('cart');
+        $items = $this->cartService->getItems();
+        $subtotal = $this->cartService->getSubtotal($items);
+        $this->view('cart/checkout',compact('items','subtotal'));
     }
+    public function placeOrder():void
+    {
+        try {
+            $shippingInfo = [
+                'address'         => trim($_POST['address'] ?? ''),
+                'receiver_name'   => trim($_POST['receiver_name'] ?? ''),
+                'receiver_mobile' => trim($_POST['receiver_mobile'] ?? ''),
+            ];
+
+            if ($shippingInfo['address'] === '' || $shippingInfo['receiver_name'] === '' || $shippingInfo['receiver_mobile'] === '') {
+                throw new Exception('لطفاً همه‌ی فیلدهای آدرس گیرنده را پر کنید');
+            }
+
+            $order = $this->cartService->placeOrder($shippingInfo);
+
+            $_SESSION['success'] = 'سفارش شما با شماره‌ی ' . $order->order_number . ' با موفقیت ثبت شد';
+            $this->redirect(('cart'));
+        } catch (Exception $e) {
+            $_SESSION['error'] = $e->getMessage();                        
+            $this->redirect('cart',);
+        }
+    }
+    
 }
